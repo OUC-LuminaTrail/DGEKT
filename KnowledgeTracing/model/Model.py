@@ -19,7 +19,8 @@ class DKT(nn.Module):
         '''initial feature'''
         emb_dim = C.EMB
         emb = nn.Embedding(2 * C.NUM_OF_QUESTIONS, emb_dim)
-        self.ques = emb(torch.LongTensor([i for i in range(2 * C.NUM_OF_QUESTIONS)])).cuda()
+        device = G.device if hasattr(G, 'device') else torch.device('cpu')
+        self.ques = emb(torch.LongTensor([i for i in range(2 * C.NUM_OF_QUESTIONS)])).to(device)
         '''generate two graphs'''
         self.G = G
         self.adj_out = adj_out

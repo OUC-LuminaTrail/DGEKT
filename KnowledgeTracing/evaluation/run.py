@@ -17,12 +17,12 @@ import pandas as pd
 
 warnings.filterwarnings('ignore')
 
-torch.cuda.set_device(0)
+# torch.cuda.set_device(0)
 sys.path.append('../')
 
 '''check cuda'''
 use_gpu = torch.cuda.is_available()
-device = torch.device('cuda')
+device = torch.device('cuda' if use_gpu else 'cpu')
 print('GPU state: ', use_gpu)
 print('Dataset: ' + C.DATASET + ', Ques number: ' + str(C.NUM_OF_QUESTIONS) + '\n')
 
@@ -30,8 +30,10 @@ print('Dataset: ' + C.DATASET + ', Ques number: ' + str(C.NUM_OF_QUESTIONS) + '\
 logger = logging.getLogger('main')
 logger.setLevel(level=logging.DEBUG)
 date = datetime.now()
+log_dir = os.path.join(os.path.dirname(__file__), 'log')
+os.makedirs(log_dir, exist_ok=True)
 handler = logging.FileHandler(
-    f'log/{date.year}_{date.month}_{date.day}_result.log')
+    os.path.join(log_dir, f'{date.year}_{date.month}_{date.day}_result.log'))
 handler.setLevel(logging.INFO)
 formatter = logging.Formatter(
     '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -61,12 +63,13 @@ trainLoaders, testLoaders = getLoader(C.DATASET)
 loss_func = eval.lossFunc(C.HIDDEN, C.MAX_STEP, device)
 
 def KTtrain():
-    adj = hgut.generate_G_from_H(pd.read_csv(r'../../Dataset/H/' + C.H + '.csv', header=None))
-    G = adj.cuda()
+    h_path = os.path.join(C.Dpath, 'H', C.H + '.csv')
+    adj = hgut.generate_G_from_H(pd.read_csv(h_path, header=None))
+    G = adj.to(device)
     adj_out, adj_in = get_adj()
-    adj_in = adj_in.cuda()
-    adj_out = adj_out.cuda()
-    model = DKT(C.HIDDEN, C.LAYERS, G, adj_out, adj_in).cuda()
+    adj_in = adj_in.to(device)
+    adj_out = adj_out.to(device)
+    model = DKT(C.HIDDEN, C.LAYERS, G, adj_out, adj_in).to(device)
     optimizer = optima.Adam(model.parameters(), lr=C.LR)
 
     best_auc = 0.0
@@ -83,7 +86,9 @@ def KTtrain():
                 best_auc = auc
                 best_acc = acc
                 best_epoch = epoch + 1
-                torch.save(model, '../model/save' + C.H + 'model.pkl')
+                model_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'model')
+                os.makedirs(model_dir, exist_ok=True)
+                torch.save(model, os.path.join(model_dir, 'save' + C.H + 'model.pkl'))
 
             print('Best auc at present: %f  acc:  %f  Best epoch: %d' % (best_auc, best_acc, best_epoch))
 

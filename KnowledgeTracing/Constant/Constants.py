@@ -4,7 +4,8 @@
 # @File : Constant.py
 # @Project: GOODKT
 # @Comment :
-Dpath = '../../Dataset'
+import os
+Dpath = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'Dataset')
 datasets = {
     'assist2009' : 'assist2009',
     'assist2012' : 'assist2012',

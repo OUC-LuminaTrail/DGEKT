@@ -46,7 +46,7 @@ class lossFunc(nn.Module):
         p0_t = self.sig(logit_t/T)
         p0_enm = self.sig(logit_ensemble/T)
         loss_kd = C.kd_loss * (torch.sum(torch.abs(p0_enm-p0_c)) + torch.sum(torch.abs(p0_enm-p0_t)))
-        loss = torch.Tensor([0.0]).cuda()
+        loss = torch.Tensor([0.0]).to(self.device)
         prediction = torch.tensor([], device=self.device)
         ground_truth = torch.tensor([], device=self.device)
 

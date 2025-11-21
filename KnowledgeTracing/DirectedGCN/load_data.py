@@ -10,12 +10,13 @@ from KnowledgeTracing.Constant import Constants as C
 import tqdm
 import itertools
 import torch
+import os
 
 
 def get_adj():
     q = C.NUM_OF_QUESTIONS
     resout = np.zeros((2 * q, 2 * q))
-    path = '../../Dataset/' + C.DATASET + '/' + C.DATASET + '_pid_train.csv'
+    path = os.path.join(C.Dpath, C.DATASET, C.DATASET + '_pid_train.csv')
 
     with open(path, 'r', encoding='UTF-8-sig') as train:
         for len, ques, _, ans in tqdm.tqdm(itertools.zip_longest(*[train] * 4), desc='Generate adjacency matrix:    ',
