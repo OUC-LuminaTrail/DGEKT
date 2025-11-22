@@ -1,4 +1,7 @@
 import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
 from KnowledgeTracing.DirectedGCN.load_data import get_adj
 from KnowledgeTracing.hgnn_models import hypergraph_utils as hgut
 from KnowledgeTracing.model.Model import DKT
@@ -11,14 +14,13 @@ import logging
 from datetime import datetime
 import numpy as np
 import warnings
-import os
 import random
 import pandas as pd
 
 warnings.filterwarnings('ignore')
 
 # torch.cuda.set_device(0)
-sys.path.append('../')
+# sys.path.append('../')
 
 '''check cuda'''
 use_gpu = torch.cuda.is_available()
