@@ -28,9 +28,9 @@ class HGNN_conv(nn.Module): # Inherited from module
 
     # forward function
     def forward(self, x: torch.Tensor, G: torch.Tensor):
-        x = x.matmul(self.weight)
+        x = x.matmul(self.weight)  #对原始题目特征进行线性变换（矩阵乘法，线性变换，可学习矩阵）
         if self.bias is not None:
-            x = x + self.bias
-        x = G.matmul(x)
+            x = x + self.bias  #加上偏置项（特征偏置）
+        x = G.matmul(x) #超图卷积操作，用G聚合邻居特征（G中共享知识点的题目信息聚合）关注不同题目的题目特征）   
         return x
 

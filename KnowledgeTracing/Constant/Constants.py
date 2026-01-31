@@ -30,8 +30,14 @@ skill = {
 
 
 DATASET = datasets['assist2017']
-NUM_OF_QUESTIONS = numbers['assist2017']
-H = '2017'
+NUM_OF_QUESTIONS = numbers[DATASET]
+h_filenames = {
+    'assist2009': 'assist2009',
+    'assist2012': 'assist2012',
+    'assist2017': '2017',
+    'assistednet': 'assistednet',
+}
+H = h_filenames[DATASET]  # hypergraph incidence matrix 配置超图矩阵文件名
 
 MAX_STEP = 50
 BATCH_SIZE = 128

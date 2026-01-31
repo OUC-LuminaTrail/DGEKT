@@ -64,14 +64,14 @@ trainLoaders, testLoaders = getLoader(C.DATASET)
 
 loss_func = eval.lossFunc(C.HIDDEN, C.MAX_STEP, device)
 
-def KTtrain():
-    h_path = os.path.join(C.Dpath, 'H', C.H + '.csv')
-    adj = hgut.generate_G_from_H(pd.read_csv(h_path, header=None))
+def KTtrain():  #训练函数 将关联矩阵转为超图G 并加载到模型中训练 
+    h_path = os.path.join(C.Dpath, 'H', C.H + '.csv') #超图关联矩阵路径
+    adj = hgut.generate_G_from_H(pd.read_csv(h_path, header=None)) #从关联矩阵H生成超图G
     G = adj.to(device)
     adj_out, adj_in = get_adj()
     adj_in = adj_in.to(device)
     adj_out = adj_out.to(device)
-    model = DKT(C.HIDDEN, C.LAYERS, G, adj_out, adj_in).to(device)
+    model = DKT(C.HIDDEN, C.LAYERS, G, adj_out, adj_in).to(device)  #加载模型，将超图G和有向图传入模型
     optimizer = optima.Adam(model.parameters(), lr=C.LR)
 
     best_auc = 0.0

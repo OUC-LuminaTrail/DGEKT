@@ -37,6 +37,11 @@ def getLoader(dataset):
         trainLoaders.append(trainLoader)
         testLoader = getTestLoader(C.Dpath + '/assist2009/assist2009_pid_test.csv')
         testLoaders.append(testLoader)
+    elif dataset == 'assist2012':
+        trainLoader = getTrainLoader(C.Dpath + '/assist2012/assist2012_pid_train.csv')
+        trainLoaders.append(trainLoader)
+        testLoader = getTestLoader(C.Dpath + '/assist2012/assist2012_pid_test.csv')
+        testLoaders.append(testLoader)
     elif dataset == 'assist2017':
         trainLoader = getTrainLoader(C.Dpath + '/assist2017/assist2017_pid_train.csv')
         trainLoaders.append(trainLoader)

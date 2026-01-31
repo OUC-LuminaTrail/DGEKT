@@ -9,7 +9,7 @@ import torch
 import scipy.sparse as sp
 
 
-def generate_G_from_H(H, variable_weight=False):
+def generate_G_from_H(H, variable_weight=False):  #从关联矩阵H生成超图G
     """
     calculate G from hypgraph incidence matrix H
     :param H: hypergraph incidence matrix H
@@ -17,13 +17,13 @@ def generate_G_from_H(H, variable_weight=False):
     :return: G
     """
     H = np.array(H)
-    n_edge = H.shape[1] # Number of columns of matrix = number of hyperedge
+    n_edge = H.shape[1] # Number of columns of matrix = number of hyperedge 知识点的数量（列数）
     # the weight of the hyperedge
-    W = np.ones(n_edge)
+    W = np.ones(n_edge)  #获得一个全1的矩阵
     # the degree of the node
-    DV = np.sum(H *W, axis=1)
+    DV = np.sum(H *W, axis=1)   #节点度（题目关联多少概念）
     # the degree of the hyperedge
-    DE = np.sum(H, axis=0)
+    DE = np.sum(H, axis=0)     #超边度（知识点被多少题目关联）
     invDE = np.mat(np.diag(np.power(DE, float(-1))))
     DV2 = np.mat(np.diag(np.power(DV, -0.5)))
     W = np.mat(np.diag(W))
@@ -35,8 +35,8 @@ def generate_G_from_H(H, variable_weight=False):
         invDE_HT_DV2 = invDE * HT * DV2
         return DV2_H, W, invDE_HT_DV2
     else:
-        G = DV2 * H * W * invDE * HT * DV2
-        G = sparse_mx_to_torch_sparse_tensor(sp.coo_matrix(G))
+        G = DV2 * H * W * invDE * HT * DV2  #公式G = Dv^-1/2 * H * W * De^-1 * H.T * Dv^-1/2 归一化矩阵？
+        G = sparse_mx_to_torch_sparse_tensor(sp.coo_matrix(G)) #将矩阵G转为torch中的稀疏张量
         # G = torch.Tensor(G)
         return G
 

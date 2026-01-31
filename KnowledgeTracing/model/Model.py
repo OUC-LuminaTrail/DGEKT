@@ -30,9 +30,9 @@ class DKT(nn.Module):
         self.net2 = GCN(nfeat=C.EMB, nhid=C.EMB, nclass=int(C.EMB / 2))
 
         '''HGCN'''
-        self.net = HGNN(in_ch=C.EMB,
-                        n_hid=C.EMB,
-                        n_class=C.EMB)
+        self.net = HGNN(in_ch=C.EMB,    #输入通道数
+                        n_hid=C.EMB,    #隐藏层通道数
+                        n_class=C.EMB)  #输出通道数    通过知识蒸馏融合
         '''GRU'''
         self.rnn1 = nn.GRU(C.EMB, hidden_dim, layer_dim, batch_first=True)
         self.rnn2 = nn.GRU(C.EMB, hidden_dim, layer_dim, batch_first=True)
